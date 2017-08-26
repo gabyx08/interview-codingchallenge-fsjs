@@ -10,10 +10,8 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended:false}));
 app.use(bodyParser.json());
 
+
 app.post('/api/lists', (req, res) => {
-
-	console.log(req.body.name)
-
 	let list = new Lists();
 	list.name = req.body.name;
 
@@ -24,6 +22,14 @@ app.post('/api/lists', (req, res) => {
 	})
 })
 
+app.get('/api/lists', (req, res) => {
+	Lists.find({}, (err, lists) => {
+		if (err) res.status(500).send({message:`Error: ${err}`})
+		if(!products) return res.status(404).send({message: 'No lists'})
+		res.status(200).send({lists})
+
+	})
+})
 
 mongoose.connect('mongodb://localhost:27017/lists',(err , res) => {
 	if(err){
